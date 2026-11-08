@@ -41,7 +41,7 @@
 
     restaurarFiltros();
     montarChips();
-    ["#f-regiao", "#f-categoria", "#f-ordem", "#f-disp"].forEach((s) => $(s).addEventListener("change", () => {
+    ["#f-regiao", "#f-categoria", "#f-ordem", "#f-disp", "#f-acess"].forEach((s) => $(s).addEventListener("change", () => {
       if (s === "#f-regiao") { lojasSel.clear(); montarChips(); }
       pagina = 1; render();
     }));
@@ -81,17 +81,17 @@
     const reg = $("#f-regiao").value, cat = $("#f-categoria").value;
     const min = parseFloat($("#f-min").value), max = parseFloat($("#f-max").value);
     const termos = $("#f-busca").value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").split(/\s+/).filter(Boolean);
-    const disp = $("#f-disp").checked;
+    const disp = $("#f-disp").checked, ocultarAcc = $("#f-acess").checked;
     const ok = new Set(lojasDaRegiao().map((l) => l.id));
     let L = D.produtos.filter((p) =>
       ok.has(p.loja_id) && (!lojasSel.size || lojasSel.has(p.loja_id)) && (!reg || p.regiao === reg) &&
       (!cat || p.categoria === cat) && (isNaN(min) || p.preco >= min) && (isNaN(max) || p.preco <= max) &&
-      (!disp || p.disponivel) &&
+      (!disp || p.disponivel) && (!ocultarAcc || !p.suspeito) &&
       (!termos.length || termos.every((t) => (p.nome + " " + p.marca).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").includes(t))));
     const ord = $("#f-ordem").value;
     const nulo = (v, dflt) => v == null ? dflt : v;
     const cmp = {
-      score: (a, b) => b.score - a.score,
+      score: (a, b) => nulo(b.score, -1) - nulo(a.score, -1),
       preco_asc: (a, b) => a.preco - b.preco,
       preco_desc: (a, b) => b.preco - a.preco,
       queda: (a, b) => nulo(a.var_90d, Infinity) - nulo(b.var_90d, Infinity),
@@ -149,7 +149,7 @@
         <td class="num ${clsVar(p.var_30d)}">${pct(p.var_30d) ?? semHist}</td>
         <td class="num">${p.desconto ? pct(-p.desconto) : "—"}</td>
         <td class="num ${clsVar(p.vs_mediana)}">${pct(p.vs_mediana) ?? "—"}</td>
-        <td class="num"><span class="score" style="background:${corScore(p.score)}">${p.score.toLocaleString("pt-BR")}</span></td>
+        <td class="num">${p.score == null ? '<span class="tag alerta" title="Preço abaixo de 20% da mediana da categoria">acessório?</span>' : `<span class="score" style="background:${corScore(p.score)}">${p.score.toLocaleString("pt-BR")}</span>`}</td>
       </tr>`).join("") : '<tr><td colspan="11" class="vazio">Nenhum produto com esses filtros.</td></tr>';
     tb.querySelectorAll("tr[data-k]").forEach((tr) => tr.onclick = () => abrirProduto(tr.dataset.k));
 
@@ -170,7 +170,7 @@
     if (!p) return;
     $("#m-nome").textContent = p.nome;
     $("#m-info").textContent = `${p.loja} · ${p.categoria} · hoje ${brl(p.preco)} · há 3 meses ${brl(p.preco_90d) ?? "[sem histórico]"} · ` +
-      `1ª observação ${dataBR(p.primeira_obs)} · índice C/B ${p.score}`;
+      `1ª observação ${dataBR(p.primeira_obs)} · índice C/B ${p.score ?? "[fora do índice: possível acessório]"}`;
     const a = $("#m-link");
     a.href = p.url || "#"; a.style.display = p.url ? "" : "none";
     graficos.produto?.destroy();

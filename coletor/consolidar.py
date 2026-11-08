@@ -9,6 +9,8 @@ Regras:
         50% posição de preço (percentil invertido: mais barato da categoria = 1)
         30% desconto sobre o preço de lista (teto de 50%)
         20% tendência 90 dias (queda = melhor; neutro 0,5 sem histórico)
+  - Itens com preço < 20% da mediana da categoria são marcados como possível
+    acessório/peça avulsa: ficam fora do índice e da mediana, e vão para Pendências.
 """
 from __future__ import annotations
 
@@ -25,6 +27,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 SAIDA = RAIZ / "docs" / "data" / "dados.json"
 TZ_BR = timezone(timedelta(hours=-3))
 SALTO_SUSPEITO = 0.5  # variação diária > 50% vira pendência
+PISO_ACESSORIO = 0.2  # preço < 20% da mediana da categoria => possível acessório/peça avulsa
 
 
 def _d(s: str) -> date:
@@ -146,17 +149,32 @@ def main() -> int:
     for p in produtos:
         por_cat[p["categoria"]].append(p)
     resumo_cat = {}
+    suspeitos = defaultdict(list)
     for cat, itens in por_cat.items():
-        precos = [p["preco"] for p in itens]
-        med = statistics.median(precos)
-        resumo_cat[cat] = {"itens": len(itens), "mediana": med, "min": min(precos), "max": max(precos)}
+        med_bruta = statistics.median(p["preco"] for p in itens)
         for p in itens:
+            p["suspeito"] = p["preco"] < PISO_ACESSORIO * med_bruta
+            if p["suspeito"]:
+                suspeitos[(p["loja_id"], cat)].append(p)
+                p["score"] = None
+                p["vs_mediana"] = round((p["preco"] - med_bruta) / med_bruta, 4)
+        validos = [p for p in itens if not p["suspeito"]]
+        precos = [p["preco"] for p in validos] or [p["preco"] for p in itens]
+        med = statistics.median(precos)
+        resumo_cat[cat] = {"itens": len(validos), "suspeitos": len(itens) - len(validos),
+                           "mediana": med, "min": min(precos), "max": max(precos)}
+        for p in validos:
             s_preco = percentil_invertido(precos, p["preco"])
             s_desc = min(p["desconto"] / 0.5, 1.0)
             v = p["var_90d"]
             s_tend = 0.5 if v is None else max(0.0, min(1.0, 0.5 - v / 0.6))
             p["score"] = round(100 * (0.5 * s_preco + 0.3 * s_desc + 0.2 * s_tend), 1)
             p["vs_mediana"] = round((p["preco"] - med) / med, 4) if med else None
+
+    for (lid, cat), itens in sorted(suspeitos.items()):
+        ex = "; ".join(f"{p['nome'][:40]} ({brl(p['preco'])})" for p in sorted(itens, key=lambda x: x["preco"])[:3])
+        pend("Possível acessório/peça na categoria", lid,
+             f"{cat}: {len(itens)} item(ns) abaixo de 20% da mediana — fora do índice C/B. Ex.: {ex}", "baixa")
 
     # ---- resumo por loja + pendências de cadastro/coleta --------------------
     log = None
@@ -206,7 +224,7 @@ def main() -> int:
         "inicio_historico": primeira_data,
         "lojas": lojas_out,
         "categorias": resumo_cat,
-        "produtos": sorted(produtos, key=lambda p: -p["score"]),
+        "produtos": sorted(produtos, key=lambda p: -(p["score"] if p["score"] is not None else -1)),
         "pendencias": pendencias,
         "metodologia": __doc__.strip(),
     }, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

@@ -53,6 +53,7 @@
         <input id="f-busca" type="search" placeholder="ex.: retrátil, 4 portas, MDF">
       </label>
       <label class="check"><input id="f-disp" type="checkbox" checked> Só disponíveis</label>
+      <label class="check"><input id="f-acess" type="checkbox" checked> Ocultar possíveis acessórios</label>
     </div>
     <div class="lojas-chips" id="f-lojas" aria-label="Lojas"></div>
 
@@ -115,6 +116,8 @@
             <li>20% tendência de 3 meses (queda pontua mais; sem histórico = neutro).</li>
           </ul>
         </li>
+        <li><b>Possível acessório:</b> item com preço abaixo de 20% da mediana da categoria (ex.: pés, bases, capas). Fica fora do índice e oculto por padrão; aparece em Pendências.</li>
+        <li><b>Preço hoje — critério por loja:</b> Mobly = preço à vista no Pix; Novo Mundo = preço "Por" (à vista ou 10x sem juros).</li>
         <li><b>vs mediana:</b> diferença do preço para a mediana da categoria no recorte coletado.</li>
       </ul>
       <h2>Limites do escopo</h2>
