@@ -1,0 +1,40 @@
+name: Coleta diária de preços
+
+on:
+  schedule:
+    - cron: "47 8 * * *"   # 05h47 em Brasília (UTC-3)
+  workflow_dispatch:
+    inputs:
+      loja:
+        description: "Coletar apenas esta loja (id). Vazio = todas."
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: coleta-precos
+  cancel-in-progress: false
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Coletar preços
+        run: python coletor/coletar.py ${{ inputs.loja && format('--loja {0}', inputs.loja) || '' }}
+      - name: Consolidar dados do app
+        run: python coletor/consolidar.py
+      - name: Gravar histórico no repositório
+        run: |
+          git config user.name "coleta-precos[bot]"
+          git config user.email "coleta-precos@users.noreply.github.com"
+          git add data docs/data
+          if git diff --cached --quiet; then echo "Sem alterações."; exit 0; fi
+          git commit -m "Coleta de preços $(TZ=America/Sao_Paulo date +%F)"
+          git push

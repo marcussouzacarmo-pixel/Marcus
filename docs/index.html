@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparativo de Móveis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topo">
+  <div>
+    <h1>Comparativo de Preços de Móveis</h1>
+    <p class="sub" id="status-dados">Carregando dados…</p>
+  </div>
+  <nav class="abas" role="tablist">
+    <button class="aba ativa" data-aba="ranking">Ranking</button>
+    <button class="aba" data-aba="lojas">Lojas</button>
+    <button class="aba" data-aba="variacao">Variação</button>
+    <button class="aba" data-aba="pendencias">Pendências <span id="qtd-pend" class="badge"></span></button>
+    <button class="aba" data-aba="metodologia">Metodologia</button>
+  </nav>
+</header>
+
+<main>
+  <!-- RANKING -->
+  <section id="aba-ranking" class="painel ativo">
+    <div class="filtros">
+      <label>Região
+        <select id="f-regiao"><option value="">Todas</option></select>
+      </label>
+      <label>Categoria
+        <select id="f-categoria"><option value="">Todas</option></select>
+      </label>
+      <label>Preço mín. (R$)
+        <input id="f-min" type="number" min="0" step="50" inputmode="decimal">
+      </label>
+      <label>Preço máx. (R$)
+        <input id="f-max" type="number" min="0" step="50" inputmode="decimal">
+      </label>
+      <label>Ordenar por
+        <select id="f-ordem">
+          <option value="score">Melhor custo-benefício</option>
+          <option value="preco_asc">Menor preço</option>
+          <option value="preco_desc">Maior preço</option>
+          <option value="queda">Maior queda em 3 meses</option>
+          <option value="alta">Maior alta em 3 meses</option>
+          <option value="desconto">Maior desconto</option>
+        </select>
+      </label>
+      <label class="busca">Buscar produto
+        <input id="f-busca" type="search" placeholder="ex.: retrátil, 4 portas, MDF">
+      </label>
+      <label class="check"><input id="f-disp" type="checkbox" checked> Só disponíveis</label>
+    </div>
+    <div class="lojas-chips" id="f-lojas" aria-label="Lojas"></div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="tabela-wrap">
+      <table class="tabela" id="tabela">
+        <thead><tr>
+          <th>#</th><th>Produto</th><th>Loja</th><th>Categoria</th>
+          <th class="num">Preço hoje</th><th class="num">Há 3 meses</th><th class="num">Var. 3m</th>
+          <th class="num">Var. 30d</th><th class="num">Desc.</th><th class="num">vs mediana</th><th class="num">Índice C/B</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="paginacao" id="paginacao"></div>
+  </section>
+
+  <!-- LOJAS -->
+  <section id="aba-lojas" class="painel">
+    <div class="cards" id="cards-lojas"></div>
+  </section>
+
+  <!-- VARIAÇÃO -->
+  <section id="aba-variacao" class="painel">
+    <p class="nota" id="nota-variacao"></p>
+    <div class="graficos">
+      <div class="grafico"><h3>Variação mediana em 3 meses por categoria</h3><canvas id="g-cat"></canvas></div>
+      <div class="grafico"><h3>Variação mediana em 3 meses por loja</h3><canvas id="g-loja"></canvas></div>
+    </div>
+    <div class="duas-colunas">
+      <div><h3>Maiores quedas (3 meses)</h3><table class="tabela compacta" id="t-quedas"><tbody></tbody></table></div>
+      <div><h3>Maiores altas (3 meses)</h3><table class="tabela compacta" id="t-altas"><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- PENDÊNCIAS -->
+  <section id="aba-pendencias" class="painel">
+    <p class="nota">Divergências e falhas de qualidade de dados são listadas aqui, nunca ajustadas em silêncio.</p>
+    <div class="tabela-wrap">
+      <table class="tabela" id="t-pend">
+        <thead><tr><th>Gravidade</th><th>Tipo</th><th>Loja</th><th>Detalhe</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- METODOLOGIA -->
+  <section id="aba-metodologia" class="painel">
+    <div class="texto">
+      <h2>Como os números são calculados</h2>
+      <ul>
+        <li><b>Atualização:</b> coleta automática diária (GitHub Actions, 06h de Brasília). A data de referência aparece no topo.</li>
+        <li><b>Preço hoje:</b> preço à vista exibido no e-commerce da loja na última coleta. Lojas manuais: preço informado no CSV.</li>
+        <li><b>Há 3 meses:</b> último preço registrado até 90 dias antes da data de referência. Sem registro nessa data: <i>[sem histórico]</i> — nada é estimado.</li>
+        <li><b>Índice custo-benefício (0–100)</b>, comparado <u>dentro da mesma categoria</u>:
+          <ul>
+            <li>50% posição de preço (o mais barato da categoria pontua 100% neste critério);</li>
+            <li>30% desconto sobre o preço "de" (teto de 50%);</li>
+            <li>20% tendência de 3 meses (queda pontua mais; sem histórico = neutro).</li>
+          </ul>
+        </li>
+        <li><b>vs mediana:</b> diferença do preço para a mediana da categoria no recorte coletado.</li>
+      </ul>
+      <h2>Limites do escopo</h2>
+      <ul>
+        <li>O índice não avalia material, medidas ou qualidade — produtos de mesma categoria podem não ser equivalentes.</li>
+        <li>O preço "de" é declarado pela loja; descontos inflados são mitigados pelo peso da tendência de 3 meses.</li>
+        <li>Preço do e-commerce pode divergir da loja física e do frete para Goiânia (não incluído).</li>
+        <li>O mesmo produto em lojas diferentes não é pareado automaticamente (sem EAN padronizado nas fontes).</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<dialog id="modal">
+  <form method="dialog"><button class="fechar" aria-label="Fechar">×</button></form>
+  <h3 id="m-nome"></h3>
+  <p id="m-info" class="sub"></p>
+  <canvas id="g-produto" height="220"></canvas>
+  <p><a id="m-link" target="_blank" rel="noopener">Abrir na loja ↗</a></p>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

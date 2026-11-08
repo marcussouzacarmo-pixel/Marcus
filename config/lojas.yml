@@ -1,0 +1,79 @@
+# =====================================================================
+# Cadastro de lojas monitoradas — Comparativo de Preços de Móveis
+# =====================================================================
+# Campos:
+#   id          identificador único (sem espaços)
+#   nome        nome exibido no app
+#   plataforma  vtex | manual
+#                 vtex   -> coleta automática pela API pública de catálogo VTEX
+#                 manual -> preços lidos de data/manual/<id>.csv (lojas sem e-commerce)
+#   base_url    domínio da loja (somente plataforma vtex)
+#   regiao      região usada no filtro do app
+#   cidade      cidade da loja / do ponto de venda de referência
+#   ativo       true/false — false = cadastrada, mas fora da coleta
+#   validado    false = conector ainda não confirmado em execução real
+#   observacao  texto livre
+#
+# IMPORTANTE: os conectores marcados com validado: false foram configurados
+# com base na plataforma presumida da loja e precisam ser confirmados na
+# primeira execução da coleta (ver aba "Pendências" do app).
+# =====================================================================
+
+lojas:
+  - id: novomundo
+    nome: Novo Mundo
+    plataforma: vtex
+    base_url: https://www.novomundo.com.br
+    regiao: Goiânia
+    cidade: Goiânia/GO
+    ativo: true
+    validado: false
+    observacao: Rede com sede em Goiânia. Preço do e-commerce (pode divergir da loja física).
+
+  - id: tokstok
+    nome: Tok&Stok
+    plataforma: vtex
+    base_url: https://www.tokstok.com.br
+    regiao: Goiânia
+    cidade: Goiânia/GO
+    ativo: true
+    validado: false
+    observacao: Preço do e-commerce nacional; loja física em Goiânia.
+
+  - id: gazin
+    nome: Gazin
+    plataforma: vtex
+    base_url: https://www.gazin.com.br
+    regiao: Interior de GO
+    cidade: "[confirmar cidade de referência]"
+    ativo: true
+    validado: false
+    observacao: "[confirmar se o site roda em VTEX]"
+
+  # Exemplo de loja física sem e-commerce: preencher data/manual/exemplo_local.csv
+  - id: exemplo_local
+    nome: "[Loja local — exemplo]"
+    plataforma: manual
+    regiao: Aparecida de Goiânia
+    cidade: Aparecida de Goiânia/GO
+    ativo: false
+    validado: false
+    observacao: Modelo para lojas de bairro. Ative após preencher o CSV.
+
+# Termos de busca -> categoria do app.
+# Cada termo é pesquisado em todas as lojas VTEX ativas.
+categorias:
+  Sofás: ["sofa", "sofa retratil", "sofa cama"]
+  Camas e Box: ["cama box", "cama casal", "cama solteiro"]
+  Colchões: ["colchao casal", "colchao queen"]
+  Guarda-roupas: ["guarda roupa", "guarda-roupa casal"]
+  Mesas de jantar: ["mesa de jantar", "conjunto sala de jantar"]
+  Cadeiras: ["cadeira de jantar", "cadeira escritorio"]
+  Racks e Painéis: ["rack", "painel para tv"]
+  Cozinhas: ["cozinha compacta", "armario de cozinha"]
+  Escrivaninhas: ["escrivaninha", "mesa escritorio"]
+
+coleta:
+  itens_por_termo: 100      # limite de produtos por termo e loja (VTEX: máx. 50 por página)
+  pausa_segundos: 1.0       # intervalo entre requisições (cortesia com o servidor da loja)
+  timeout_segundos: 30
