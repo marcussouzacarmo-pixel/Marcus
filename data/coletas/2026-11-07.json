@@ -1,15 +1,15 @@
 {
   "data": "2026-11-07",
-  "inicio": "2026-11-07T22:50:12.965344-03:00",
+  "inicio": "2026-11-07T22:53:55.715743-03:00",
   "lojas": [
     {
       "loja_id": "novomundo",
       "plataforma": "vtex",
       "status": "erro",
       "itens": 0,
-      "erro": "RuntimeError: nenhuma API VTEX respondeu — API legado: JSONDecodeError: Expecting value: line 1 column 1 (char 0) | API intelligent: JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
-      "segundos": 1.5
+      "erro": "RuntimeError: nenhuma API VTEX respondeu — API legado: ValueError: resposta não é JSON (provável bloqueio anti-robô ou outra plataforma): <!DOCTYPE html><html lang=pt-BR><head><meta name=google-site-verification content=VYkJTG1SzqeH0AIZrOF9XxnGNtNlR3YI7uF2Rx2SePo /><title>Novo Mundo | Eletrodomésticos, Móveis, TVs e Celulares</title><meta name=description content=\"Na Novo Mundo você encontra eletrodomésticos, móveis, TVs, celulares e | API intelligent: ValueError: resposta não é JSON (provável bloqueio anti-robô ou outra plataforma): <!DOCTYPE html><html lang=pt-BR><head><meta name=google-site-verification content=VYkJTG1SzqeH0AIZrOF9XxnGNtNlR3YI7uF2Rx2SePo /><title>Novo Mundo | Eletrodomésticos, Móveis, TVs e Celulares</title><meta name=description content=\"Na Novo Mundo você encontra eletrodomésticos, móveis, TVs, celulares e",
+      "segundos": 1.1
     }
   ],
-  "fim": "2026-11-07T22:50:14.454055-03:00"
+  "fim": "2026-11-07T22:53:56.863333-03:00"
 }
