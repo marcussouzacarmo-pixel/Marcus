@@ -4,7 +4,8 @@
 # Campos:
 #   id          identificador único (sem espaços)
 #   nome        nome exibido no app
-#   plataforma  vtex | manual
+#   plataforma  wake | vtex | manual
+#                 wake   -> páginas de categoria (Wake Commerce/Fbits); exige categorias_url
 #                 vtex   -> coleta automática pela API pública de catálogo VTEX
 #                 manual -> preços lidos de data/manual/<id>.csv (lojas sem e-commerce)
 #   base_url    domínio da loja (somente plataforma vtex)
@@ -22,13 +23,22 @@
 lojas:
   - id: novomundo
     nome: Novo Mundo
-    plataforma: vtex
+    plataforma: wake
     base_url: https://www.novomundo.com.br
     regiao: Goiânia
     cidade: Goiânia/GO
     ativo: true
     validado: false
-    observacao: Rede com sede em Goiânia. Preço do e-commerce (pode divergir da loja física).
+    max_paginas: 10
+    observacao: Rede com sede em Goiânia. Preço do e-commerce (pode divergir da loja física). Plataforma Wake Commerce.
+    categorias_url:
+      Sofás: [/moveis/sala-de-estar/sofas/sofa-2-lugares, /moveis/sala-de-estar/sofas/sofa-3-lugares]
+      Camas e Box: [/moveis/quarto/colchoes-e-box/base-cama-box-casal, /moveis/quarto/colchoes-e-box/base-cama-box-queen, /moveis/quarto/colchoes-e-box/base-cama-box-king, /moveis/quarto/colchoes-e-box/base-cama-box-solteiro]
+      Colchões: [/moveis/quarto/colchoes-e-box/colchao-de-casal, /moveis/quarto/colchoes-e-box/colchao-queen, /moveis/quarto/colchoes-e-box/colchao-king, /moveis/quarto/colchoes-e-box/colchao-de-solteiro, /moveis/quarto/colchoes-e-box/colchao-espuma]
+      Guarda-roupas: [/moveis/guarda-roupa]
+      Mesas de jantar: [/moveis/sala-de-jantar/conjunto-de-mesas-e-cadeiras, /moveis/cozinha/conjunto-de-mesas-e-cadeiras-de-cozinha]
+      Racks e Painéis: [/moveis/sala-de-estar/paineis-para-tv]
+      Cozinhas: [/moveis/cozinha/cozinha-compacta, /moveis/cozinha/cozinha-completa, /moveis/cozinha/kit-cozinha, /moveis/cozinha/balcoes]
 
   - id: tokstok
     nome: Tok&Stok

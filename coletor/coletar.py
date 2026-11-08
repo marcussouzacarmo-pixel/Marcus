@@ -23,7 +23,7 @@ import yaml
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 
-from coletor.plataformas import vtex, manual  # noqa: E402
+from coletor.plataformas import vtex, manual, wake  # noqa: E402
 
 TZ_BR = timezone(timedelta(hours=-3))  # America/Sao_Paulo (sem horário de verão desde 2019)
 CAMPOS = [
@@ -81,6 +81,8 @@ def main() -> int:
         try:
             if loja["plataforma"] == "vtex":
                 regs, avisos = vtex.coletar(loja, cfg["categorias"], params)
+            elif loja["plataforma"] == "wake":
+                regs, avisos = wake.coletar(loja, cfg["categorias"], params)
             elif loja["plataforma"] == "manual":
                 regs, avisos = manual.coletar(loja, RAIZ / "data" / "manual")
             else:

@@ -40,9 +40,9 @@ def baixar(url: str) -> dict:
         "Accept-Language": "pt-BR,pt;q=0.9", "Accept-Encoding": "gzip, deflate" + (", br" if brotli else "")})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            corpo, status, cab, final = r.read(), r.status, dict(r.headers), r.geturl()
+            corpo, status, cab, final = r.read(), r.status, {k.title(): v for k, v in r.headers.items()}, r.geturl()
     except urllib.error.HTTPError as e:
-        corpo, status, cab, final = e.read(), e.code, dict(e.headers), url
+        corpo, status, cab, final = e.read(), e.code, {k.title(): v for k, v in e.headers.items()}, url
     except Exception as e:  # noqa: BLE001
         return {"url": url, "erro": f"{type(e).__name__}: {e}"}
     enc = (cab.get("Content-Encoding") or "").lower()
