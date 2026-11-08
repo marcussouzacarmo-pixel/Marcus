@@ -11,6 +11,11 @@ import gzip
 import json
 import time
 import zlib
+
+try:
+    import brotli  # Novo Mundo responde sempre em Brotli
+except ImportError:  # pragma: no cover
+    brotli = None
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -21,7 +26,7 @@ PAGINA = 50
 
 def _get_json(url: str, timeout: float):
     req = urllib.request.Request(url, headers={
-        "User-Agent": UA, "Accept": "application/json", "Accept-Encoding": "gzip, deflate"})
+        "User-Agent": UA, "Accept": "application/json", "Accept-Encoding": "gzip, deflate" + (", br" if brotli else "")})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         bruto = resp.read()
         enc = (resp.headers.get("Content-Encoding") or "").lower()
@@ -29,6 +34,8 @@ def _get_json(url: str, timeout: float):
         bruto = gzip.decompress(bruto)
     elif enc == "deflate":
         bruto = zlib.decompress(bruto)
+    elif enc == "br" and brotli:
+        bruto = brotli.decompress(bruto)
     elif enc and enc != "identity":
         raise ValueError(f"compressão não suportada: {enc}")
     return json.loads(bruto.decode("utf-8"))

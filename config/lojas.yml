@@ -36,9 +36,9 @@ lojas:
     base_url: https://www.tokstok.com.br
     regiao: Goiânia
     cidade: Goiânia/GO
-    ativo: true
+    ativo: false
     validado: false
-    observacao: Preço do e-commerce nacional; loja física em Goiânia.
+    observacao: "Desativada em 08/11/2026: APIs VTEX retornaram 404 — site não é VTEX. [conector próprio necessário]"
 
   - id: gazin
     nome: Gazin
@@ -46,9 +46,9 @@ lojas:
     base_url: https://www.gazin.com.br
     regiao: Interior de GO
     cidade: "[confirmar cidade de referência]"
-    ativo: true
+    ativo: false
     validado: false
-    observacao: "[confirmar se o site roda em VTEX]"
+    observacao: "Desativada em 08/11/2026: APIs VTEX retornaram 404 — site não é VTEX. [conector próprio necessário]"
 
   # Exemplo de loja física sem e-commerce: preencher data/manual/exemplo_local.csv
   - id: exemplo_local
