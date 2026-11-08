@@ -4,7 +4,8 @@
 # Campos:
 #   id          identificador único (sem espaços)
 #   nome        nome exibido no app
-#   plataforma  wake | vtex | manual
+#   plataforma  wake | mobly | vtex | manual
+#                 mobly  -> páginas de categoria da Mobly (dados embutidos Next.js); exige categorias_url
 #                 wake   -> páginas de categoria (Wake Commerce/Fbits); exige categorias_url
 #                 vtex   -> coleta automática pela API pública de catálogo VTEX
 #                 manual -> preços lidos de data/manual/<id>.csv (lojas sem e-commerce)
@@ -39,6 +40,27 @@ lojas:
       Mesas de jantar: [/moveis/sala-de-jantar/conjunto-de-mesas-e-cadeiras, /moveis/cozinha/conjunto-de-mesas-e-cadeiras-de-cozinha]
       Racks e Painéis: [/moveis/sala-de-estar/paineis-para-tv]
       Cozinhas: [/moveis/cozinha/cozinha-compacta, /moveis/cozinha/cozinha-completa, /moveis/cozinha/kit-cozinha, /moveis/cozinha/balcoes]
+
+  - id: mobly
+    nome: Mobly
+    plataforma: mobly
+    base_url: https://www.mobly.com.br
+    regiao: Online (entrega em Goiânia)
+    cidade: E-commerce nacional
+    ativo: true
+    validado: false
+    max_paginas: 2
+    observacao: Preço à vista no Pix (o preço no cartão é maior). Frete para Goiânia não incluído.
+    categorias_url:
+      Sofás: [/moveis/sofas]
+      Camas e Box: [/moveis/camas-box]
+      Colchões: [/moveis/colchoes]
+      Guarda-roupas: [/moveis/guarda-roupas]
+      Mesas de jantar: [/moveis/conjunto-mesas-cadeiras-jantar, /moveis/mesas-de-jantar]
+      Cadeiras: [/moveis/cadeiras-de-jantar, /moveis/cadeiras-escritorio]
+      Racks e Painéis: [/moveis/racks-paineis-estantes-home-theater]
+      Cozinhas: [/moveis/moveis-cozinha]
+      Escrivaninhas: [/moveis/escrivaninhas]
 
   - id: tokstok
     nome: Tok&Stok
