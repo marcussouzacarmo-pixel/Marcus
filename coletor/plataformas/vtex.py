@@ -38,7 +38,12 @@ def _get_json(url: str, timeout: float):
         bruto = brotli.decompress(bruto)
     elif enc and enc != "identity":
         raise ValueError(f"compressão não suportada: {enc}")
-    return json.loads(bruto.decode("utf-8"))
+    texto = bruto.decode("utf-8", errors="replace")
+    try:
+        return json.loads(texto)
+    except json.JSONDecodeError:
+        trecho = " ".join(texto[:300].split())
+        raise ValueError(f"resposta não é JSON (provável bloqueio anti-robô ou outra plataforma): {trecho}") from None
 
 
 def _busca_legado(base: str, termo: str, ini: int, fim: int, extra: str, timeout: float) -> list:
