@@ -1,0 +1,30 @@
+name: Diagnóstico de sites
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python coletor/diagnostico.py
+      - name: Gravar no branch "diagnostico" (fora da main)
+        run: |
+          git config user.name "coleta-precos[bot]"
+          git config user.email "coleta-precos@users.noreply.github.com"
+          mv diagnostico /tmp/diag
+          git checkout --orphan diagnostico
+          git rm -rfq .
+          mv /tmp/diag diagnostico
+          git add diagnostico
+          git commit -qm "Diagnóstico de sites $(date -u +%FT%TZ)"
+          git push -f origin diagnostico
