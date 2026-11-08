@@ -1,6 +1,6 @@
 {
   "data": "2026-11-07",
-  "inicio": "2026-11-07T23:01:19.249323-03:00",
+  "inicio": "2026-11-07T23:03:38.483359-03:00",
   "lojas": [
     {
       "loja_id": "novomundo",
@@ -12,8 +12,16 @@
         "/moveis/quarto/colchoes-e-box/colchao-espuma: nenhum produto lido (layout mudou?)",
         "/moveis/cozinha/kit-cozinha: nenhum produto lido (layout mudou?)"
       ],
-      "segundos": 42.8
+      "segundos": 39.4
+    },
+    {
+      "loja_id": "mobly",
+      "plataforma": "mobly",
+      "status": "ok",
+      "itens": 1048,
+      "avisos": [],
+      "segundos": 57.7
     }
   ],
-  "fim": "2026-11-07T23:02:02.045866-03:00"
+  "fim": "2026-11-07T23:05:15.646890-03:00"
 }
