@@ -20,13 +20,10 @@ except ImportError:
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/130.0 Safari/537.36")
 ALVOS = {
-    "mobly_moveis": "https://www.mobly.com.br/moveis",
-    "mobly_sofas_p2": "https://www.mobly.com.br/moveis/sofas?page=2",
-    "madeiramadeira_busca": "https://www.madeiramadeira.com.br/busca?q=sofa",
-    "madeiramadeira_home": "https://www.madeiramadeira.com.br/",
-    "tokstok_busca_s": "https://www.tokstok.com.br/s?q=sofa",
-    "tokstok_busca_search": "https://www.tokstok.com.br/search?q=sofa",
-    "tokstok_sofas": "https://www.tokstok.com.br/sofas",
+    "magalu_robots": "https://www.magazineluiza.com.br/robots.txt",
+    "magalu_busca": "https://www.magazineluiza.com.br/busca/sofa/",
+    "magalu_categoria": "https://www.magazineluiza.com.br/sofas/moveis-e-decoracao/s/mo/sofa/",
+    "magalu_moveis": "https://www.magazineluiza.com.br/moveis/l/mo/",
 }
 
 
