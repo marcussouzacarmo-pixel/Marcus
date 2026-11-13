@@ -1,0 +1,27 @@
+{
+  "data": "2026-11-13",
+  "inicio": "2026-11-13T13:45:40.659876-03:00",
+  "lojas": [
+    {
+      "loja_id": "novomundo",
+      "plataforma": "wake",
+      "status": "ok",
+      "itens": 87,
+      "avisos": [
+        "/moveis/quarto/colchoes-e-box/base-cama-box-solteiro: nenhum produto lido (layout mudou?)",
+        "/moveis/quarto/colchoes-e-box/colchao-espuma: nenhum produto lido (layout mudou?)",
+        "/moveis/cozinha/kit-cozinha: nenhum produto lido (layout mudou?)"
+      ],
+      "segundos": 49.0
+    },
+    {
+      "loja_id": "mobly",
+      "plataforma": "mobly",
+      "status": "ok",
+      "itens": 1027,
+      "avisos": [],
+      "segundos": 67.4
+    }
+  ],
+  "fim": "2026-11-13T13:47:37.072499-03:00"
+}
